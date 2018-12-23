@@ -57,12 +57,12 @@ public class Main {
 		System.out.println("### TRIGRAMS ###");
 		System.out.println(trigrams.size());
 		System.out.println();
-		trigrams.stream().forEach(t->{ System.out.println(t);});
+		//trigrams.stream().forEach(t->{ System.out.print(t+" ");});
 		
 		System.out.println("### BIGRAMS ###");
 		System.out.println(bigrams.size());
 		System.out.println();
-		bigrams.stream().forEach(t->{ System.out.println(t);});
+		//bigrams.stream().forEach(t->{ System.out.print(t+" ");});
 		System.out.println("Time elapsed (milliseconds): "+(timeEnd-timeStart));
 		
 
