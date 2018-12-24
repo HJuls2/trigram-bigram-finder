@@ -9,13 +9,15 @@ import parallel.Master;
 
 public class BigramWorker extends Worker {
 	
-	public BigramWorker(String line) {
-		super(line);
+	public BigramWorker(List<String> lines) {
+		super(lines);
 	}
 	
 	public void run() {
 		List<String> words=new ArrayList<String>();
-		words.addAll(Arrays.asList(super.getLine().split("\\s")));
+		for(String line : super.getLines()) {
+			words.addAll(Arrays.asList(line.split("\\s")));
+		}
 		
 		for(String word : words) {
 			for(int i=0;i<word.length()-2;i++) 

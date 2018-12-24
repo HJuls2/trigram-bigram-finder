@@ -1,17 +1,19 @@
 package parallel;
 
+import java.util.List;
+
 public abstract class Worker extends Thread {
-	private String line;
+	private List<String> lines;
 	private int count;
 	
-	public Worker(String line) {
-		this.line=line;
+	public Worker(List<String> lines) {
+		this.lines=lines;
 		count=0;
 		
 	}
 	
-	public String getLine() {
-		return line;
+	public List<String> getLines() {
+		return lines;
 	}
 	
 	public int getCount() {

@@ -44,7 +44,6 @@ public class Main {
 		}
 		
 		String bigram=null;
-		
 		for(String word: words) {
 			for(int i=0;i<word.length()-1;i++) {
 				bigram=word.substring(i,i+2);
