@@ -2,7 +2,7 @@
 
 This is an exercise for the Parallel Computing class.<br><br>
 
-The goal is to count **trigram** and **bigrams** in a list of text sources.<br>
+The goal is to count **trigram** and **bigrams** of letters in a list of text sources.<br>
 
 The repository contains two Java version of the exercise: a sequential version and a parallel one.<br>
 
