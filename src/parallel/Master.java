@@ -18,27 +18,35 @@ public class Master {
 		
 		List<String> lines=new ArrayList<String>();
 		
+		int numThreads=1;
+		
 		for(String arg:args) {
-			FileLoader fileLoader=new FileLoader(arg);
-			lines.addAll(fileLoader.readWholeFile());
+			if(arg.contains(".txt")) {
+				FileLoader fileLoader=new FileLoader(arg);
+				lines.addAll(fileLoader.readWholeFile());	
+			}
+			else {
+				numThreads=Integer.parseInt(arg);
+			}
+			
 
 		}
 		
 		
 		long timeStart=System.currentTimeMillis();
 		
-		TrigramWorker[] trigramWorkers=new TrigramWorker[6];
-		BigramWorker[] bigramWorkers=new BigramWorker[6];
+		TrigramWorker[] trigramWorkers=new TrigramWorker[numThreads];
+		BigramWorker[] bigramWorkers=new BigramWorker[numThreads];
 		
-		int maxNumberxThreads=lines.size()/6;
+		int maxNumberxThreads=lines.size()/numThreads;
 	
 		
 		for(int i=0;i<trigramWorkers.length; i++) {
 			int end;
-			if((i*maxNumberxThreads+maxNumberxThreads) < lines.size())
+			if((i*maxNumberxThreads+maxNumberxThreads) < lines.size()-maxNumberxThreads)
 				end=i*maxNumberxThreads+maxNumberxThreads;
 			else 
-				end=lines.size()-1;
+				end=lines.size();
 			
 			trigramWorkers[i]=new TrigramWorker(lines.subList(i*maxNumberxThreads, end));
 			trigramWorkers[i].start();
@@ -56,10 +64,10 @@ public class Master {
 		
 		for(int i=0;i<bigramWorkers.length; i++) {
 			int end;
-			if((i*maxNumberxThreads+maxNumberxThreads) < lines.size())
+			if((i*maxNumberxThreads+maxNumberxThreads) < lines.size()-maxNumberxThreads)
 				end=i*maxNumberxThreads+maxNumberxThreads;
 			else 
-				end=lines.size()-1;
+				end=lines.size();
 			
 			bigramWorkers[i]=new BigramWorker(lines.subList(i*maxNumberxThreads, end));
 			bigramWorkers[i].start();
@@ -78,13 +86,7 @@ public class Master {
 		
 		long timeEnd=System.currentTimeMillis();
 		
-		System.out.println("### TRIGRAMS ###");
-		System.out.println(trigramCounter.get());
-		
-		System.out.println("### BIGRAMS ###");
-		System.out.println(bigramCounter.get());
-		
-		System.out.println("Time elapsed (milliseconds): "+(timeEnd-timeStart));
+		System.out.println((timeEnd-timeStart));
 		
 	}
 

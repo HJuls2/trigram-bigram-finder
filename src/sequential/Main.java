@@ -1,15 +1,8 @@
 package sequential;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 import tools.FileLoader;
 
@@ -25,7 +18,10 @@ public class Main {
 		}
 		
 		List<String> words=new ArrayList<String>();
-		lines.forEach((line)-> {words.addAll(Arrays.asList(line.split("\\s")));});
+		lines.forEach((line)-> {
+			words.addAll(Arrays.asList(line.split("\\s")));});
+		
+		lines=null;
 		
 		List<String> trigrams=new ArrayList<String>();
 		List<String> bigrams=new ArrayList<String>();
@@ -53,16 +49,7 @@ public class Main {
 		
 		long timeEnd=System.currentTimeMillis();
 		
-		System.out.println("### TRIGRAMS ###");
-		System.out.println(trigrams.size());
-		System.out.println();
-		//trigrams.stream().forEach(t->{ System.out.print(t+" ");});
-		
-		System.out.println("### BIGRAMS ###");
-		System.out.println(bigrams.size());
-		System.out.println();
-		//bigrams.stream().forEach(t->{ System.out.print(t+" ");});
-		System.out.println("Time elapsed (milliseconds): "+(timeEnd-timeStart));
+		System.out.println((timeEnd-timeStart));
 		
 
         
