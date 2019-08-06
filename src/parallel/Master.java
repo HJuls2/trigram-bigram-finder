@@ -1,20 +1,20 @@
 package parallel;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicIntegerArray;
 
 import tools.FileLoader;
 
 public class Master {
 	
 	public static void main(String[] args) {
-		AtomicInteger bigramCounter=new AtomicInteger(0);
-		AtomicInteger trigramCounter=new AtomicInteger(0);
+		
+		Map<Integer,AtomicInteger> globalCounters = new HashMap<Integer, AtomicInteger>(2);
+		globalCounters.put(2, new AtomicInteger(0));
+		globalCounters.put(3,new AtomicInteger(0));
 		
 		List<String> lines=new ArrayList<String>();
 		
@@ -29,62 +29,41 @@ public class Master {
 				numThreads=Integer.parseInt(arg);
 			}
 			
-
 		}
 		
 		
 		long timeStart=System.currentTimeMillis();
 		
-		TrigramWorker[] trigramWorkers=new TrigramWorker[numThreads];
-		BigramWorker[] bigramWorkers=new BigramWorker[numThreads];
+		List<KGramWorker> workers = new ArrayList<KGramWorker>();
 		
-		int maxNumberxThreads=lines.size()/numThreads;
+		
+		int maxNumberxThreads=lines.size()/numThreads+1;
 	
 		
-		for(int i=0;i<trigramWorkers.length; i++) {
+		for(int i=0;i<numThreads; i++) {
 			int end;
-			if((i*maxNumberxThreads+maxNumberxThreads) < lines.size()-maxNumberxThreads)
-				end=i*maxNumberxThreads+maxNumberxThreads;
+			if((i+1)*maxNumberxThreads < lines.size())
+				end=(i+1)*maxNumberxThreads;
 			else 
 				end=lines.size();
 			
-			trigramWorkers[i]=new TrigramWorker(lines.subList(i*maxNumberxThreads, end));
-			trigramWorkers[i].start();
+			workers.add(new KGramWorker(globalCounters, lines.subList(i*maxNumberxThreads, end)));
+			workers.get(i).start();
 			
 		}
 		
-		for(int i=0;i<trigramWorkers.length;i++) {
+		for(KGramWorker worker : workers) {
 			try {
-				trigramWorkers[i].join();
-				trigramCounter.addAndGet(trigramWorkers[i].getCount());
+				worker.join();
 			}
 			catch (InterruptedException ie) {}
 			
 		}
-		
-		for(int i=0;i<bigramWorkers.length; i++) {
-			int end;
-			if((i*maxNumberxThreads+maxNumberxThreads) < lines.size()-maxNumberxThreads)
-				end=i*maxNumberxThreads+maxNumberxThreads;
-			else 
-				end=lines.size();
-			
-			bigramWorkers[i]=new BigramWorker(lines.subList(i*maxNumberxThreads, end));
-			bigramWorkers[i].start();
-			
-		}
-		
-		for(int i=0;i<bigramWorkers.length;i++) {
-			try {
-				bigramWorkers[i].join();
-				bigramCounter.addAndGet(bigramWorkers[i].getCount());
-			}
-			catch (InterruptedException ie) {}
-			
-		}
-				
 		
 		long timeEnd=System.currentTimeMillis();
+		
+		System.out.println("BIGRAMS: "+globalCounters.get(2));
+		System.out.println("TRIGRAMS: "+globalCounters.get(3));
 		
 		System.out.println((timeEnd-timeStart));
 		
