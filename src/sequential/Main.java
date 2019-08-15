@@ -49,6 +49,8 @@ public class Main {
 		
 		long timeEnd=System.currentTimeMillis();
 		
+		//System.out.println(bigrams.size());
+		//System.out.println(trigrams.size());
 		System.out.println((timeEnd-timeStart));
 		
 

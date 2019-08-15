@@ -30,11 +30,14 @@ public class FileLoader {
 			System.out.println("Can't read "+ filename);
 		}
 		
-		lines.forEach( (line) -> {lowerLines.add(line.toLowerCase());});
+		lines.forEach( (line) -> {
+			if(!line.isBlank() && !line.isEmpty())
+				lowerLines.add(line.toLowerCase());
+			});
 		
 		
 		
-		return lines;
+		return lowerLines;
 		
 	}
 	

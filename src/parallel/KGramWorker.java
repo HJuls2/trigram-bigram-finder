@@ -18,7 +18,7 @@ public class KGramWorker extends Thread {
 		this.lines = lines;
 		this.globalCountersMap = globalCountersMap;
 		
-		this.localCountersMap = new HashMap<>(globalCountersMap.size());
+		this.localCountersMap = new HashMap<Integer,Integer>(globalCountersMap.size());
 		
 		for(Integer kgramSize : globalCountersMap.keySet()) {
 			this.localCountersMap.put(kgramSize, 0);
@@ -28,14 +28,18 @@ public class KGramWorker extends Thread {
 	
 	public void run() {
 		List<String> words = new ArrayList<String>();
-		for(String line : this.getLines()) {
+		for(String line : this.lines) {
 			words.addAll(Arrays.asList(line.split("\\s")));
 		}
 		
 		for(Integer kgramSize : globalCountersMap.keySet()) {
 			for(String word : words) {
-				for(int i=0;i<word.length()-kgramSize;i++) 
-					this.incrementLocalCounter(kgramSize);				
+				for(int i=0;i<=word.length()-kgramSize;i++) {
+					this.incrementLocalCounter(kgramSize);
+					//System.out.println(word.substring(i, i+kgramSize));
+					
+				}
+								
 			}
 			globalCountersMap.get(kgramSize).addAndGet(this.localCountersMap.get(kgramSize));
 			

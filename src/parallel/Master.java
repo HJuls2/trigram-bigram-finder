@@ -18,38 +18,41 @@ public class Master {
 		
 		List<String> lines=new ArrayList<String>();
 		
-		int numThreads=1;
+		int numThreads = 1;
 		
-		for(String arg:args) {
+		for(String arg : args) {
 			if(arg.contains(".txt")) {
-				FileLoader fileLoader=new FileLoader(arg);
-				lines.addAll(fileLoader.readWholeFile());	
+				FileLoader fileLoader = new FileLoader(arg);
+				lines.addAll(fileLoader.readWholeFile());
 			}
 			else {
-				numThreads=Integer.parseInt(arg);
+				numThreads = Integer.parseInt(arg);
 			}
 			
 		}
 		
 		
-		long timeStart=System.currentTimeMillis();
+		long timeStart = System.currentTimeMillis();
 		
 		List<KGramWorker> workers = new ArrayList<KGramWorker>();
 		
 		
-		int maxNumberxThreads=lines.size()/numThreads+1;
-	
+		int maxNumberxThreads = lines.size()/numThreads+1;
+	 
+		if( lines.size() < numThreads ) {
+			numThreads = lines.size();
+		}
 		
-		for(int i=0;i<numThreads; i++) {
-			int end;
-			if((i+1)*maxNumberxThreads < lines.size())
-				end=(i+1)*maxNumberxThreads;
-			else 
-				end=lines.size();
+		int i = 0;
+		int end = 0;
+		
+		while(i<numThreads && end < lines.size()) {
+			end = ((i+1)*maxNumberxThreads < lines.size()) ? (i+1)*maxNumberxThreads : lines.size(); 
 			
 			workers.add(new KGramWorker(globalCounters, lines.subList(i*maxNumberxThreads, end)));
 			workers.get(i).start();
 			
+			i++;
 		}
 		
 		for(KGramWorker worker : workers) {
@@ -62,8 +65,8 @@ public class Master {
 		
 		long timeEnd=System.currentTimeMillis();
 		
-		System.out.println("BIGRAMS: "+globalCounters.get(2));
-		System.out.println("TRIGRAMS: "+globalCounters.get(3));
+		//System.out.println("BIGRAMS: "+globalCounters.get(2));
+		//System.out.println("TRIGRAMS: "+globalCounters.get(3));
 		
 		System.out.println((timeEnd-timeStart));
 		
